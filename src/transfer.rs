@@ -23,16 +23,16 @@ fn find_file_extension(input: &str) -> Result<&str> {
         return Err(TransferError::ExtensionNotFound);
     }
     let extension = input.rsplit('.').next().unwrap();
-    if extension.len() == 0 {
+    if extension.is_empty() {
         return Err(TransferError::ExtensionNotFound);
     }
-    return Ok(extension);
+    Ok(extension)
 }
 
 fn find_episode_num(input: &str) -> Result<u16> {
     let blocks: Vec<&str> = input
         .split(|c| c == '[' || c == ']' || c == ' ')
-        .filter(|s| s.len() > 0)
+        .filter(|s| !s.is_empty())
         .collect();
     for block in blocks {
         if block.chars().all(char::is_numeric) {

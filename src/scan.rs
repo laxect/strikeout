@@ -2,7 +2,7 @@ use std::{collections::HashSet, fs, io};
 use thiserror::Error;
 use walkdir::{DirEntry, WalkDir};
 
-static FILE_LIST_CACHE: &'static str = ".strikeout_cache";
+static FILE_LIST_CACHE: &str = ".strikeout_cache";
 
 #[derive(Error, Debug)]
 pub enum ScanError {
@@ -36,15 +36,14 @@ fn check_file(entry: DirEntry, file_list: &mut HashSet<String>, new_file_list: &
         return Ok(());
     }
     let path = entry.path().to_str().ok_or(ScanError::InvalidPath)?;
-    if !file_list.contains(path) {
-        file_list.insert(path.to_string());
+    if file_list.insert(path.to_owned()) {
         new_file_list.push(entry);
     }
     Ok(())
 }
 
 fn is_hidden(entry: &DirEntry) -> bool {
-    entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
+    entry.file_name().to_str().map(|s| s.starts_with('.')).unwrap_or(false)
 }
 
 pub fn get_file_list() -> Result<HashSet<String>> {
