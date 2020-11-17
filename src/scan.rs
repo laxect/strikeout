@@ -1,11 +1,17 @@
-use std::{collections::HashSet, ffi};
+use std::{collections::HashSet, fs, io};
 use thiserror::Error;
 use walkdir::{DirEntry, WalkDir};
 
+static FILE_LIST_CACHE: &'static str = ".strikeout_cache";
+
 #[derive(Error, Debug)]
-enum ScanError {
+pub enum ScanError {
     #[error("Not a valid path.")]
     InvalidPath,
+    #[error("No cache file found.")]
+    CacheNotFound(#[from] io::Error),
+    #[error("Cache Parse Failed.")]
+    InvalidCache(#[from] serde_json::Error),
 }
 
 type Result<T> = std::result::Result<T, ScanError>;
@@ -41,10 +47,18 @@ fn is_hidden(entry: &DirEntry) -> bool {
     entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
 }
 
-pub fn get_old_file_list() -> HashSet<String> {
-    HashSet::new()
+pub fn get_file_list() -> Result<HashSet<String>> {
+    let file = fs::File::open(FILE_LIST_CACHE)?;
+    let file_list = serde_json::from_reader(file)?;
+    Ok(file_list)
 }
 
-pub fn store_old_file_list(old_file_list: &HashSet<String>) {
+pub fn store_file_list(old_file_list: &HashSet<String>) -> Result<()> {
+    let file = fs::File::with_options()
+        .write(true)
+        .create(true)
+        .open(FILE_LIST_CACHE)?;
+    serde_json::to_writer(file, old_file_list)?;
+    Ok(())
     // pass
 }
