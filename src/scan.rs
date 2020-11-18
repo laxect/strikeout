@@ -49,3 +49,9 @@ pub fn store_file_list(old_file_list: &HashSet<String>) -> Result<()> {
     Ok(())
     // pass
 }
+
+pub fn clear_cache() -> Result<()> {
+    let file = fs::File::open(FILE_LIST_CACHE)?;
+    file.set_len(0)?;
+    Ok(())
+}
