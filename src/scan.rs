@@ -1,22 +1,10 @@
-use std::{collections::HashSet, fs, io};
-use thiserror::Error;
+use crate::error::{Error, Result};
+use std::{collections::HashSet, fs, path::Path};
 use walkdir::{DirEntry, WalkDir};
 
 static FILE_LIST_CACHE: &str = ".strikeout_cache";
 
-#[derive(Error, Debug)]
-pub enum ScanError {
-    #[error("Not a valid path.")]
-    InvalidPath,
-    #[error("No cache file found.")]
-    CacheNotFound(#[from] io::Error),
-    #[error("Cache Parse Failed.")]
-    InvalidCache(#[from] serde_json::Error),
-}
-
-type Result<T> = std::result::Result<T, ScanError>;
-
-pub fn scan_new_file(dir: &str, file_list: &mut HashSet<String>) -> Vec<DirEntry> {
+pub fn scan_new_file(dir: &Path, file_list: &mut HashSet<String>) -> Vec<DirEntry> {
     let mut new_file_list = Vec::new();
     for entry in WalkDir::new(dir).into_iter().filter_entry(|e| !is_hidden(e)) {
         if let Ok(entry) = entry {
@@ -35,7 +23,7 @@ fn check_file(entry: DirEntry, file_list: &mut HashSet<String>, new_file_list: &
     if !entry.file_type().is_file() {
         return Ok(());
     }
-    let path = entry.path().to_str().ok_or(ScanError::InvalidPath)?;
+    let path = entry.path().to_str().ok_or(Error::InvalidPath)?;
     if file_list.insert(path.to_owned()) {
         new_file_list.push(entry);
     }
