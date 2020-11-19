@@ -51,7 +51,8 @@ fn main() {
         simplelog::LevelFilter::Error
     };
     let log_config = simplelog::ConfigBuilder::new().set_time_format_str("%+").build();
-    simplelog::SimpleLogger::init(log_level, log_config).expect("log set failed");
+    let term_mode = simplelog::TerminalMode::Stdout;
+    simplelog::TermLogger::init(log_level, log_config, term_mode).expect("log set failed");
     // panic logs
     log_panics::init();
     // change working dir
