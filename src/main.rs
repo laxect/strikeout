@@ -50,7 +50,7 @@ fn main() {
     } else {
         simplelog::LevelFilter::Error
     };
-    let log_config = simplelog::Config::default();
+    let log_config = simplelog::ConfigBuilder::new().set_time_format_str("%+").build();
     simplelog::SimpleLogger::init(log_level, log_config).expect("log set failed");
     // panic logs
     log_panics::init();
