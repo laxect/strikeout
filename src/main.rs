@@ -67,13 +67,12 @@ fn main() {
     let mut file_set = scan::get_file_list().unwrap_or_default();
     let list = scan::scan_new_file(&src, &mut file_set);
     for file in list.into_iter() {
-        if let Ok(target) = link::map_to_dest(file.path(), &src, &dest) {
-            log::info!("{} -> {}", file.path().display(), target.display());
-            if dry_run {
-                log::info!("{} skiped.", file.path().display())
-            } else if let Err(e) = link::link_to(file.path(), &target) {
-                log::error!("{} link failed. {}.", file.path().display(), e);
-            }
+        let target = link::map_to_dest(file.path(), &src, &dest);
+        log::info!("{} -> {}", file.path().display(), target.display());
+        if dry_run {
+            log::info!("{} skiped.", file.path().display())
+        } else if let Err(e) = link::link_to(file.path(), &target) {
+            log::error!("{} link failed. {}.", file.path().display(), e);
         }
     }
     if !dry_run {

@@ -8,14 +8,18 @@ use std::{
 /// src: "a"
 /// dest : "d"
 /// expect result: "d/b/S01E01.text"
-pub fn map_to_dest(file: &Path, src: &Path, dest: &Path) -> Result<PathBuf> {
+pub fn map_to_dest(file: &Path, src: &Path, dest: &Path) -> PathBuf {
     let mut path = PathBuf::from(dest);
     let file_name: PathBuf = file.file_name().expect("Error: file name Not found").into();
     let inner_path = file.strip_prefix(src).expect("Error: find files not in src");
     path.push(inner_path.parent().expect("Error: root file"));
-    let transfered_file_name = transfer::trans(&file_name)?;
-    path.push(transfered_file_name);
-    Ok(path)
+    if let Ok(transfered_file_name) = transfer::trans(&file_name) {
+        path.push(transfered_file_name);
+    } else {
+        // just use original name when can not parse
+        path.push(file_name);
+    }
+    path
 }
 
 /// create all dir need
