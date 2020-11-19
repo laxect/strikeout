@@ -52,6 +52,8 @@ fn main() {
     };
     let log_config = simplelog::Config::default();
     simplelog::SimpleLogger::init(log_level, log_config).expect("log set failed");
+    // panic logs
+    log_panics::init();
     // change working dir
     if let Some(ref working_dir) = working_dir {
         env::set_current_dir(working_dir).expect("Working dir change failed");

@@ -136,6 +136,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "log-panics"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae0136257df209261daa18d6c16394757c63e032e27aafd8b07788b051082bef"
+dependencies = [
+ "log",
+]
+
+[[package]]
 name = "num-integer"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -251,6 +260,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "log",
+ "log-panics",
  "serde_json",
  "simplelog",
  "thiserror",
