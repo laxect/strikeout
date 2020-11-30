@@ -29,7 +29,6 @@ struct Opts {
 fn index_mode(src: &Path) {
     let mut file_set = std::collections::HashSet::new();
     scan::scan_new_file(&src, &mut file_set);
-    scan::clear_cache().ok();
     if let Err(e) = scan::store_file_list(&file_set) {
         log::error!("File list cache failed.\n{}", e);
     };
