@@ -65,7 +65,12 @@ fn main() {
         return;
     }
     // get file list
-    let mut file_set = scan::get_file_list().unwrap_or_default();
+    let mut file_set = scan::get_file_list()
+        .map_err(|e| {
+            log::error!("data cache load failed: {}", e);
+            ()
+        })
+        .unwrap_or_default();
     let list = scan::scan_new_file(&src, &mut file_set);
     for file in list.into_iter() {
         let target = link::map_to_dest(file.path(), &src, &dest);
