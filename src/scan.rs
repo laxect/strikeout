@@ -53,7 +53,11 @@ pub fn get_file_list() -> Result<HashSet<String>> {
 }
 
 pub fn store_file_list(old_file_list: &HashSet<String>) -> Result<()> {
-    let file = fs::File::with_options().truncate(true).write(true).create(true).open(data_file())?;
+    let file = fs::File::with_options()
+        .truncate(true)
+        .write(true)
+        .create(true)
+        .open(data_file())?;
     serde_json::to_writer(file, old_file_list)?;
     Ok(())
     // pass
