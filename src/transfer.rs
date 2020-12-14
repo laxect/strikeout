@@ -18,7 +18,7 @@ pub fn trans(input: &Path) -> Result<String> {
 
 fn find_episode_num(input: &str) -> Result<u16> {
     let blocks: Vec<&str> = input
-        .split(|c| c == '[' || c == ']' || c == ' ')
+        .split(|c| c == '[' || c == ']' || c == ' ' || c == '【' || c == '】')
         .filter(|s| !s.is_empty())
         .collect();
     for block in blocks {
