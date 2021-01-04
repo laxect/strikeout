@@ -22,10 +22,10 @@ pub fn scan_new_file(dir: &path::Path, file_list: &mut HashSet<String>) -> Vec<D
         if let Ok(entry) = entry {
             let file_name = entry.file_name().to_string_lossy().to_string();
             if let Err(e) = check_file(entry, file_list, &mut new_file_list) {
-                log::error!("File {} process failed because of {}", file_name, e);
+                log::error!("file {} process failed because of {}", file_name, e);
             }
         } else {
-            log::error!("Can not access file.");
+            log::error!("can not access file.");
         }
     }
     new_file_list

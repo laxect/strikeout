@@ -30,7 +30,7 @@ fn index_mode(src: &Path) {
     let mut file_set = std::collections::HashSet::new();
     scan::scan_new_file(&src, &mut file_set);
     if let Err(e) = scan::store_file_list(&file_set) {
-        log::error!("File list cache failed.\n{}", e);
+        log::error!("file list cache failed.\n{}", e);
     };
 }
 
@@ -56,7 +56,7 @@ fn main() {
     log_panics::init();
     // change working dir
     if let Some(ref working_dir) = working_dir {
-        env::set_current_dir(working_dir).expect("Working dir change failed");
+        env::set_current_dir(working_dir).expect("working dir change failed");
     }
     // index mode
     if index {
@@ -81,7 +81,7 @@ fn main() {
     }
     if !dry_run {
         if let Err(e) = scan::store_file_list(&file_set) {
-            log::error!("File list cache failed.\n{}", e);
+            log::error!("file list cache failed.\n{}", e);
         };
     }
 }
